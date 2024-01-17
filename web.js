@@ -1,16 +1,12 @@
 {function LoadImgMote(currimgmote) {
     function retrieve(url, cb) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                cb(xmlHttp.responseText);
-        }
-        xmlHttp.open("GET", url, true); // true for asynchronous 
-        xmlHttp.send(null);
+        $.get(url, (data) => {
+            cb(data);
+        });
     }
     let name = (currimgmote.innerHTML).replace(":", "_");
     retrieve(`/es/imgmotes/i/${name}`, (response) => {
-        var newimgmote = document.createElement("img");
+        let newimgmote = document.createElement("img");
         newimgmote.setAttribute("style", "max-width: 16px; max-height: 16px");
         newimgmote.setAttribute("loading", "lazy");
         newimgmote.setAttribute("alt", ":" + name + ":-imgmote.");
@@ -23,9 +19,11 @@
     });
 }
     
-
-imgmotes = document.getElementsByTagName("imgmote");
-for (var i = imgmotes.length - 1; i >= 0; i--) {
-    LoadImgMote(imgmotes.item(i));
-
-}}
+    setInterval(() => {
+        let imgmotes = (document.getElementsByTagName("imgmote"))
+        ;
+        for (let i = 0; i < imgmotes.length; i++) {
+            LoadImgMote(imgmotes.item(i));
+        }
+    }, 100);
+}
